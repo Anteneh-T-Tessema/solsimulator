@@ -3,7 +3,7 @@
  */
 
 import { promises as fs } from 'fs';
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 import { EmulatorConfig, WalletProfile, LogLevel, PerformanceMode } from '../interfaces/common';
 
 export interface CLIConfig {
@@ -447,12 +447,30 @@ export class ConfigManager {
   private mergeWithDefaults(config: CLIConfig): CLIConfig {
     const defaultConfig = CONFIG_TEMPLATES.default;
     
-    return {
-      network: { ...defaultConfig.network, ...config.network },
-      emulator: { ...defaultConfig.emulator, ...config.emulator },
-      developer: { ...defaultConfig.developer, ...config.developer },
-      wallets: config.wallets || defaultConfig.wallets,
-      cli: { ...defaultConfig.cli, ...config.cli }
-    };
+    // Use JSON parse/stringify to deep clone and merge
+    const result = JSON.parse(JSON.stringify(defaultConfig)) as CLIConfig;
+    
+    // Merge each section if it exists in config
+    if (config.network) {
+      result.network = { ...result.network, ...config.network };
+    }
+    
+    if (config.emulator) {
+      result.emulator = { ...result.emulator, ...config.emulator };
+    }
+    
+    if (config.developer) {
+      result.developer = { ...result.developer, ...config.developer };
+    }
+    
+    if (config.wallets) {
+      result.wallets = config.wallets;
+    }
+    
+    if (config.cli) {
+      result.cli = { ...result.cli, ...config.cli };
+    }
+
+    return result;
   }
 }

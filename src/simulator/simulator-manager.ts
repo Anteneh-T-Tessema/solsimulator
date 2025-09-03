@@ -53,7 +53,7 @@ class ConsoleLogger implements Logger {
 
   debug(message: string, context?: Record<string, unknown>): void {
     if (this.shouldLog('debug')) {
-      
+      console.debug(this.formatMessage('debug', message, context));
     }
   }
 

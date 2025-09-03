@@ -3,7 +3,7 @@
  */
 
 import { SimulatorManagerImpl } from '../simulator/simulator-manager';
-import { ConfigManager, CLIConfig } from './config-manager';
+import { ConfigManager } from './config-manager';
 import { EmulatorConfig, EmulatorInstance, EmulatorStatus, LogLevel } from '../interfaces/common';
 import { OutputFormatter } from './output-formatter';
 
@@ -373,8 +373,8 @@ export class CLIManager {
       const configPath = 'solana-sim.config.json';
       
       await this.configManager.initializeConfig(configPath, {
-        force: options.force,
-        template: options.template
+        force: options.force || false,
+        template: options.template || 'default'
       });
 
       this.outputFormatter.success(`Configuration file created: ${configPath}`);
